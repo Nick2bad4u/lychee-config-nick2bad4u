@@ -1,11 +1,6 @@
 # lychee-config-nick2bad4u
 
-[![npm license.](https://flat.badgen.net/npm/license/lychee-config-nick2bad4u?color=purple)](https://github.com/Nick2bad4u/lychee-config-nick2bad4u/blob/main/LICENSE)
-[![npm total downloads.](https://flat.badgen.net/npm/dt/lychee-config-nick2bad4u?color=pink)](https://www.npmjs.com/package/lychee-config-nick2bad4u)
-[![latest GitHub release.](https://flat.badgen.net/github/release/Nick2bad4u/lychee-config-nick2bad4u?color=cyan)](https://github.com/Nick2bad4u/lychee-config-nick2bad4u/releases)
-[![GitHub stars.](https://flat.badgen.net/github/stars/Nick2bad4u/lychee-config-nick2bad4u?color=yellow)](https://github.com/Nick2bad4u/lychee-config-nick2bad4u/stargazers)
-[![GitHub open issues.](https://flat.badgen.net/github/open-issues/Nick2bad4u/lychee-config-nick2bad4u?color=red)](https://github.com/Nick2bad4u/lychee-config-nick2bad4u/issues)
-[![codecov.](https://flat.badgen.net/codecov/github/Nick2bad4u/lychee-config-nick2bad4u?color=blue)](https://codecov.io/gh/Nick2bad4u/lychee-config-nick2bad4u)
+[![NPM license.](https://flat.badgen.net/npm/license/lychee-config-nick2bad4u?color=purple)](https://github.com/Nick2bad4u/lychee-config-nick2bad4u/blob/main/LICENSE) [![NPM total downloads.](https://flat.badgen.net/npm/dt/lychee-config-nick2bad4u?color=pink)](https://www.npmjs.com/package/lychee-config-nick2bad4u) [![Latest GitHub release.](https://flat.badgen.net/github/release/Nick2bad4u/lychee-config-nick2bad4u?color=cyan)](https://github.com/Nick2bad4u/lychee-config-nick2bad4u/releases) [![GitHub stars.](https://flat.badgen.net/github/stars/Nick2bad4u/lychee-config-nick2bad4u?color=yellow)](https://github.com/Nick2bad4u/lychee-config-nick2bad4u/stargazers) [![GitHub forks.](https://flat.badgen.net/github/forks/Nick2bad4u/lychee-config-nick2bad4u?color=orange)](https://github.com/Nick2bad4u/lychee-config-nick2bad4u/forks) [![GitHub open issues.](https://flat.badgen.net/github/open-issues/Nick2bad4u/lychee-config-nick2bad4u?color=red)](https://github.com/Nick2bad4u/lychee-config-nick2bad4u/issues) [![Codecov.](https://flat.badgen.net/codecov/github/Nick2bad4u/lychee-config-nick2bad4u?color=blue)](https://codecov.io/gh/Nick2bad4u/lychee-config-nick2bad4u) [![Repo Checks.](https://flat.badgen.net/github/checks/Nick2bad4u/lychee-config-nick2bad4u?color=green)](https://github.com/Nick2bad4u/lychee-config-nick2bad4u/actions)
 
 Shared [Lychee](https://lychee.cli.rs/) link checker configuration for Nick2bad4u repositories.
 
