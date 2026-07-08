@@ -1,41 +1,88 @@
-# Nick2bad4u Repository Template
+# lychee-config-nick2bad4u
 
-[![NPM license.](https://flat.badgen.net/npm/license/nick2bad4u-repo-template?color=purple)](https://github.com/Nick2bad4u/nick2bad4u-repo-template/blob/main/LICENSE) [![NPM total downloads.](https://flat.badgen.net/npm/dt/nick2bad4u-repo-template?color=pink)](https://www.npmjs.com/package/nick2bad4u-repo-template) [![Latest GitHub release.](https://flat.badgen.net/github/release/Nick2bad4u/nick2bad4u-repo-template?color=cyan)](https://github.com/Nick2bad4u/nick2bad4u-repo-template/releases) [![GitHub stars.](https://flat.badgen.net/github/stars/Nick2bad4u/nick2bad4u-repo-template?color=yellow)](https://github.com/Nick2bad4u/nick2bad4u-repo-template/stargazers) [![GitHub forks.](https://flat.badgen.net/github/forks/Nick2bad4u/nick2bad4u-repo-template?color=green)](https://github.com/Nick2bad4u/nick2bad4u-repo-template/forks) [![GitHub open issues.](https://flat.badgen.net/github/open-issues/Nick2bad4u/nick2bad4u-repo-template?color=red)](https://github.com/Nick2bad4u/nick2bad4u-repo-template/issues) [![Codecov.](https://codecov.io/gh/Nick2bad4u/nick2bad4u-repo-template/branch/main/graph/badge.svg)](https://codecov.io/gh/Nick2bad4u/nick2bad4u-repo-template)
+[![npm license.](https://flat.badgen.net/npm/license/lychee-config-nick2bad4u?color=purple)](https://github.com/Nick2bad4u/lychee-config-nick2bad4u/blob/main/LICENSE)
+[![npm total downloads.](https://flat.badgen.net/npm/dt/lychee-config-nick2bad4u?color=pink)](https://www.npmjs.com/package/lychee-config-nick2bad4u)
+[![latest GitHub release.](https://flat.badgen.net/github/release/Nick2bad4u/lychee-config-nick2bad4u?color=cyan)](https://github.com/Nick2bad4u/lychee-config-nick2bad4u/releases)
+[![GitHub stars.](https://flat.badgen.net/github/stars/Nick2bad4u/lychee-config-nick2bad4u?color=yellow)](https://github.com/Nick2bad4u/lychee-config-nick2bad4u/stargazers)
+[![GitHub open issues.](https://flat.badgen.net/github/open-issues/Nick2bad4u/lychee-config-nick2bad4u?color=red)](https://github.com/Nick2bad4u/lychee-config-nick2bad4u/issues)
+[![codecov.](https://flat.badgen.net/codecov/github/Nick2bad4u/lychee-config-nick2bad4u?color=blue)](https://codecov.io/gh/Nick2bad4u/lychee-config-nick2bad4u)
 
-Starter repository for the tooling patterns used across the most active repos under `C:\Repos` and `F:\Repos`.
+Shared [Lychee](https://lychee.cli.rs/) link checker configuration for Nick2bad4u repositories.
 
-The target shape is a modern public npm package or config/plugin repository:
+## What It Does
 
-- Node 24 with npm 11.
-- ESM package layout.
-- TypeScript build and strict typecheck.
-- Vitest tests and coverage.
-- Shared Nick2bad4u configs for ESLint, Prettier, npm-package-json-lint, Remark, Secretlint, Gitleaks, Yamllint, Stylelint, TSDoc, and TypeDoc.
-- GitHub Actions for CI, CodeQL, dependency/security automation, Dependabot, labeling, stale issue handling, and npm provenance publishing.
-- Agent instructions and commit-message guidance so new AI sessions do not have to rediscover the project rules.
+This package publishes a raw `lychee.toml` file plus a typed Node helper for tooling that needs to resolve that file. The config:
 
-## Use This Template
+- keeps CI output deterministic with detailed, non-interactive reports;
+- enables a short-lived successful-request cache while refusing to cache rate-limit and server-error responses;
+- uses modest global and per-host concurrency for GitHub-heavy repositories;
+- checks HTTP, HTTPS, local file, and mailto links while leaving mail checks disabled by default;
+- excludes local/private addresses, generated outputs, dependency folders, lock files, binary assets, badges, and bot-hostile social sites.
 
-After creating a new repo from this template, run:
+It does not wrap Lychee in a custom CLI. Consumers should keep using Lychee's native `--config` option so repository-local overrides stay obvious.
 
-```bash
-npm run setup:template -- --name my-package --description "Package description"
-npm install
-npm run lint:all
+## Install
+
+```sh
+npm install --save-dev lychee-config-nick2bad4u
 ```
 
-Useful options:
+Install Lychee separately through Chocolatey, Homebrew, Docker, GitHub Actions, or the official release binaries.
 
-```bash
-npm run setup:template -- --name eslint-plugin-example --description "ESLint plugin for example rules" --repo Nick2bad4u/eslint-plugin-example
-npm run setup:template -- --name internal-tool --private true --no-publish
-npm run setup:template -- --name docs-plugin --docs true --stylelint true
+## Usage
+
+Run Lychee directly against the packaged config:
+
+```sh
+lychee --config node_modules/lychee-config-nick2bad4u/lychee.toml .
 ```
 
-## What Gets Standardized
+For an npm script:
 
-The template intentionally keeps app-specific workflows, Electron build jobs, Docusaurus deploys, Codecov, SonarCloud, VirusTotal, and IndexNow out of the default CI path. Those exist in your active repos, but they are not universal enough to belong in every new repo.
+```json
+{
+ "scripts": {
+  "lint:links": "lychee --config node_modules/lychee-config-nick2bad4u/lychee.toml ."
+ }
+}
+```
 
-## Maintenance Checklist
+Lychee accepts more than one `--config` file. Later config files take precedence, so add a repository-local override after the shared config when a repo needs `base_url`, `root_dir`, extra excludes, or different status handling:
 
-Use [docs/UPDATE_CHECKLIST.md](docs/UPDATE_CHECKLIST.md) when creating a new repository from this template or refreshing the template after shared tooling updates.
+```json
+{
+ "scripts": {
+  "lint:links": "lychee --config node_modules/lychee-config-nick2bad4u/lychee.toml --config lychee.toml ."
+ }
+}
+```
+
+For list-valued settings such as `exclude`, `exclude_path`, and `extensions`, treat the local override as a full replacement unless you have verified Lychee's merge behavior for the specific option.
+
+## Node Helper
+
+The package exports `configPath` for scripts that need the absolute path to the packaged TOML file:
+
+```ts
+import { configPath } from "lychee-config-nick2bad4u";
+
+console.log(configPath);
+```
+
+## Generated Files
+
+The shared config writes Markdown output to `.lychee.report.md` and uses Lychee's `.lycheecache` cache. Add both to consuming repositories' `.gitignore` files unless you intentionally publish those artifacts.
+
+## Verification
+
+This repository uses strict package, lint, type, test, coverage, and publishability checks:
+
+```sh
+npm run release:verify
+```
+
+To verify the TOML parses with the installed Lychee binary without performing network checks:
+
+```sh
+npm run lint:lychee:smoke
+```

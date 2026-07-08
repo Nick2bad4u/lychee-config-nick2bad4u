@@ -234,6 +234,6 @@ This project license is here: [Project License](https://github.com/{{ remote.git
     # GitHub repository metadata used by the changelog template.
     [remote.github]
         owner = "Nick2bad4u"
-        repo  = "nick2bad4u-repo-template"
+        repo  = "lychee-config-nick2bad4u"
         # api_url = "https://api.github.com"
         # native_tls = false

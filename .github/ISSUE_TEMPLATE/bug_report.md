@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a reproducible bug in nick2bad4u-repo-template
+about: Report a reproducible bug in lychee-config-nick2bad4u
 title: "Bug: "
 labels:
  - bug
@@ -12,28 +12,34 @@ assignees: []
 
 <!-- Briefly describe the bug and impact. -->
 
-## Rule / Area
+## Area
 
-<!-- Example: prefer-ts-extras-array-at, docs/docusaurus, presets, runtime API docs -->
+<!-- Example: shared config, Node helper, package metadata, CI usage, docs -->
 
 ## Reproduction
 
-### Flat config snippet
-
-```mjs
-// Minimal eslint.config.mjs (or relevant excerpt)
-```
-
-### Minimal code sample
-
-```ts
-// Minimal reproducible input
-```
-
-### Command and output
+### Lychee command
 
 ```bash
-# Example: npm run test -- test/prefer-ts-extras-array-at.test.ts
+lychee --config node_modules/lychee-config-nick2bad4u/lychee.toml .
+```
+
+### Local override, if any
+
+```toml
+# Minimal local lychee.toml excerpt
+```
+
+### Relevant link or file
+
+```md
+<!-- Minimal reproducible input -->
+```
+
+### Command output
+
+```text
+# Paste the relevant Lychee output
 ```
 
 ## Steps to reproduce
@@ -50,12 +56,10 @@ assignees: []
 
 - Node.js version:
 - npm version:
-- ESLint version:
-- TypeScript version:
-- `@typescript-eslint/*` version:
-- `nick2bad4u-repo-template` version/commit:
+- Lychee version:
+- `lychee-config-nick2bad4u` version/commit:
 - OS:
 
 ## Additional context
 
-<!-- Add logs, screenshots, benchmark numbers, or related issues/PRs if helpful. -->
+<!-- Add logs, links, screenshots, or related issues/PRs if helpful. -->

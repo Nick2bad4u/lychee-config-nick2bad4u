@@ -1,25 +1,37 @@
 # Repository Instructions
 
-This repository is a reusable starter for Nick2bad4u npm/TypeScript projects.
-Treat the root files as the GitHub template payload.
+This repository publishes the shared `lychee.toml` baseline for Nick2bad4u repositories.
+Treat the raw TOML file and the tiny TypeScript resolver as the public package surface.
 
 ## Priorities
 
-- Preserve the shared tooling defaults unless a target repository has a clear reason to opt out.
-- Prefer repository scripts over ad hoc commands in GitHub Actions.
-- Keep generated output, dependency folders, build artifacts, and local reports out of commits.
+- Keep `lychee.toml` reusable across repositories; put one-off link exceptions in consuming repos.
+- Do not hardcode tokens, cookies, private URLs, or repository-specific auth headers in the shared config.
+- Keep Lychee concurrency conservative enough for GitHub-heavy CI runs.
+- Keep generated output, dependency folders, build artifacts, caches, and local reports out of commits.
 - Do not weaken security scanners or release gates to make CI pass.
 - Keep workflow permissions least-privilege and keep third-party actions pinned by SHA where already pinned.
 
 ## Common Commands
 
 ```bash
-npm run setup:template -- --name my-package --description "Package description"
+npm ci
+npm run build
+npm run lint:lychee:smoke
 npm run lint:all
 npm run typecheck
 npm run test
+npm run package:check
 npm run release:verify
 ```
+
+## Package Surface
+
+- `lychee.toml` is the shared Lychee config consumed by other repositories.
+- `src/preset.ts` exports `configFileName`, `packageName`, `resolveConfigPath`, and `configPath`.
+- `package.json#files` must publish `dist` and `lychee.toml`.
+- Consumers should run Lychee directly with `--config node_modules/lychee-config-nick2bad4u/lychee.toml`.
+- Repository-local overrides should be passed as later `--config` arguments.
 
 ## Tooling Baseline
 

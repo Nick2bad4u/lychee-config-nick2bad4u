@@ -928,6 +928,8 @@ storybook/stories/__screenshots__/
 assets/prettier-plugin-multiline-arrays/
 codeql-agent-results/
 gha-creds-*.json
+.lychee.report.md
+.lycheecache
 reports/
 TODO.md
 temp/

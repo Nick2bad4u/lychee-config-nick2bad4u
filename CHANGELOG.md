@@ -2,4 +2,4 @@
 
 ## Unreleased
 
-- Initial local template scaffold.
+- Initial shared Lychee config package scaffold.

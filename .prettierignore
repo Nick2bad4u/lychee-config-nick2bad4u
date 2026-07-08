@@ -3,6 +3,8 @@ libs/
 
 # Ignore node_modules
 node_modules/
+.lychee.report.md
+.lycheecache/
 
 # Ignore other common folders that shouldn't be formatted
 build/

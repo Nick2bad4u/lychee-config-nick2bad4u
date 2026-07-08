@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest a new rule or improvement for nick2bad4u-repo-template
+about: Suggest a Lychee config, helper, docs, or package improvement
 title: "Feature: "
 labels:
  - enhancement
@@ -10,37 +10,37 @@ assignees: []
 
 ## Problem statement
 
-<!-- What developer pain does this solve? -->
+<!-- What link-checking, CI, or maintenance pain does this solve? -->
 
 ## Proposed solution
 
-<!-- Describe expected behavior, messages, and fixer/suggestion expectations. -->
+<!-- Describe the expected config, helper, package, or documentation change. -->
 
 ## Scope
 
-- Type: New rule / Rule enhancement / Config preset / Docs / Tooling
-- Affected rule IDs (if any):
-- Requires type checking?: Yes / No / Unsure
+- Type: Shared config / Node helper / Docs / Tooling / CI
+- Affected Lychee option(s), if any:
+- Requires repository-local overrides?: Yes / No / Unsure
 
 ## Alternatives considered
 
 ## Examples
 
-### Before
+### Current behavior
 
-```ts
-// Code that should be reported (if applicable)
+```toml
+# Current config or consumer setup
 ```
 
-### After
+### Desired behavior
 
-```ts
-// Desired code after fix/suggestion
+```toml
+# Proposed config or consumer setup
 ```
 
 ## Acceptance criteria
 
-- [ ] Clear, actionable diagnostic message(s)
-- [ ] Safe autofix or suggestion behavior defined
-- [ ] Test coverage plan (valid/invalid/edge/fixer)
-- [ ] Documentation impact identified (`docs/rules/<rule-id>.md` if rule-related)
+- [ ] Shared defaults remain safe for general Nick2bad4u repositories
+- [ ] Repository-specific exceptions stay out of the shared config
+- [ ] Tests or smoke checks cover the change
+- [ ] Documentation impact is identified

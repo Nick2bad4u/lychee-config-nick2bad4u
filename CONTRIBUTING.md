@@ -4,12 +4,15 @@
 
 ```bash
 npm ci
-npm run setup:template -- --name my-package --description "Package description"
+npm run build
 ```
+
+Install the Lychee CLI separately if you want to run the TOML smoke check or full repository link check locally.
 
 ## Before Opening A Pull Request
 
 ```bash
+npm run lint:lychee:smoke
 npm run lint:all
 npm run typecheck
 npm run test

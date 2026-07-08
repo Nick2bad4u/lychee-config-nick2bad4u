@@ -1,49 +1,58 @@
 {
     "$schema": "https://www.schemastore.org/package.json",
-    "name": "nick2bad4u-repo-template",
+    "name": "lychee-config-nick2bad4u",
     "version": "0.1.0",
-    "private": true,
-    "description": "Reusable starter repository for Nick2bad4u TypeScript/npm projects.",
+    "private": false,
+    "description": "Shared Lychee link checker config for Nick2bad4u projects.",
     "keywords": [
-        "github-template",
-        "typescript",
-        "npm",
-        "tooling"
+        "lychee",
+        "lychee-config",
+        "link-checker",
+        "markdown",
+        "shared-config"
     ],
-    "homepage": "https://github.com/Nick2bad4u/nick2bad4u-repo-template",
+    "homepage": "https://github.com/Nick2bad4u/lychee-config-nick2bad4u#readme",
     "bugs": {
-        "url": "https://github.com/Nick2bad4u/nick2bad4u-repo-template/issues"
+        "url": "https://github.com/Nick2bad4u/lychee-config-nick2bad4u/issues",
+        "email": "20943337+Nick2bad4u@users.noreply.github.com"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Nick2bad4u/nick2bad4u-repo-template.git"
+        "url": "git+https://github.com/Nick2bad4u/lychee-config-nick2bad4u.git"
     },
     "license": "MIT",
     "author": "Nick2bad4u <20943337+Nick2bad4u@users.noreply.github.com> (https://github.com/Nick2bad4u)",
     "contributors": [
-        "Nick2bad4u <20943337+Nick2bad4u@users.noreply.github.com> (https://github.com/Nick2bad4u)"
+        {
+            "name": "Nick2bad4u",
+            "email": "20943337+Nick2bad4u@users.noreply.github.com",
+            "url": "https://github.com/Nick2bad4u"
+        }
     ],
+    "sideEffects": false,
     "type": "module",
     "exports": {
         ".": {
-            "types": "./dist/tooling-baseline.d.ts",
-            "default": "./dist/tooling-baseline.js"
-        }
+            "types": "./dist/preset.d.ts",
+            "import": "./dist/preset.js",
+            "require": null
+        },
+        "./package.json": "./package.json"
     },
-    "types": "./dist/tooling-baseline.d.ts",
+    "main": "./dist/preset.js",
+    "types": "./dist/preset.d.ts",
     "files": [
         "dist",
-        "src",
-        "README.md",
-        "LICENSE"
+        "lychee.toml"
     ],
     "scripts": {
-        "build": "tsc -p tsconfig.build.json",
+        "build": "npm run clean:dist && tsc -p tsconfig.build.json",
         "build:runtime": "npm run build",
         "build:watch": "npm run build -- --watch",
         "changelog:generate": "npx git-cliff --config cliff.toml --output CHANGELOG.md",
         "changelog:preview": "npx git-cliff --config cliff.toml --unreleased",
         "changelog:release-notes": "npx git-cliff --config cliff.toml --current --strip all",
+        "clean:dist": "node scripts/clean-dist.mjs",
         "coverage": "vitest run --coverage",
         "lint": "cross-env NODE_OPTIONS=--max_old_space_size=8192 eslint . --cache --cache-strategy content --cache-location .cache/.eslintcache",
         "lint:actions": "actionlint -config-file actionlint.yml",
@@ -54,6 +63,8 @@
         "lint:fix": "npm run lint -- --fix",
         "lint:gitleaks": "gitleaks dir --config .gitleaks.toml .",
         "lint:jscpd": "jscpd --config jscpd.json",
+        "lint:lychee": "lychee --config lychee.toml .",
+        "lint:lychee:smoke": "lychee --config lychee.toml --dump-inputs README.md",
         "lint:node-config": "node -e \"JSON.parse(require('node:fs').readFileSync('node.config.json','utf8')); console.log('node.config.json ok')\"",
         "lint:package": "npm run lint:package-sort && npm run lint:package-json && npm run lint:package-check",
         "lint:package:fix": "sort-package-json package.json",
@@ -75,7 +86,6 @@
         "package:check": "npm pack --dry-run",
         "release:check": "npm run release:verify",
         "release:verify": "npm run sync:node-version-files:check && npm run build && npm run lint:all && npm run test:coverage && npm run lint:package-check",
-        "setup:template": "node scripts/setup-template.mjs",
         "sync:node-version-files": "node scripts/sync-node-version-files.mjs",
         "sync:node-version-files:check": "node scripts/sync-node-version-files.mjs --check",
         "test": "vitest run",
@@ -131,5 +141,6 @@
         "access": "public",
         "provenance": true,
         "registry": "https://registry.npmjs.org/"
-    }
+    },
+    "readme": "README.md"
 }

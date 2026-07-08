@@ -10,7 +10,7 @@
 # -----------------------------------------------------------------------------
 # Bootstrap labels (GitHub CLI)
 # -----------------------------------------------------------------------------
-# Sync-GitHub-Label.ps1 -SourceRepo "Nick2bad4u/nick2bad4u-repo-template"
+# Sync-GitHub-Label.ps1 -SourceRepo "Nick2bad4u/lychee-config-nick2bad4u"
 # Script is in: $PSScriptRoot\Sync-GitHub-Label.ps1
 # =============================================================================
 CI/CD:
@@ -62,6 +62,7 @@ configuration:
                 - ".github/labeler.yml"
                 - "ActionLintConfig.yaml"
                 - "cliff.toml"
+                - "lychee.toml"
                 - "knip.config.ts"
                 - "node.config.json"
                 - "stryker.config.mjs"
@@ -151,9 +152,8 @@ refactor:
 rules:
     - changed-files:
           - any-glob-to-any-file:
-                - "src/rules/**/*.ts"
-                - "src/_internal/**/*.ts"
-                - "src/plugin.ts"
+                - "lychee.toml"
+                - "src/preset.ts"
 
 security:
     - body:

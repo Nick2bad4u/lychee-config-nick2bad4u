@@ -18,6 +18,7 @@
             "./eslint.config.mjs",
             "./vitest.config.ts",
             "./cliff.toml",
+            "./lychee.toml",
             "./README.md",
             "./CHANGELOG.md",
             "./LICENSE"
