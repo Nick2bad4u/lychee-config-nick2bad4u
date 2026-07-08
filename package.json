@@ -98,6 +98,9 @@
         "update-deps": "npx ncu -i --install never && npm update --force && npm install --force && npm run sync:node-version-files",
         "verify": "npm run release:verify"
     },
+    "overrides": {
+        "esbuild": "0.28.1"
+    },
     "devDependencies": {
         "@arethetypeswrong/cli": "^0.18.4",
         "@microsoft/tsdoc-config": "^0.18.1",
