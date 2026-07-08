@@ -270,7 +270,7 @@ jobs:
                     exit 1
                   fi
 
-                  git commit -m "chore: release ${TAG}"
+                  git commit -m "🔖 [chore] Release ${TAG}"
                   git tag -a "$TAG" -m "$TAG"
                   git push origin "HEAD:${BRANCH}"
                   git push origin "$TAG"
