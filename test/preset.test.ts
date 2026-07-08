@@ -44,7 +44,7 @@ describe("lychee-config-nick2bad4u", () => {
     });
 
     it("keeps the shared Lychee defaults focused on CI-friendly link checks", async () => {
-        expect.assertions(12);
+        expect.assertions(13);
 
         const config = await readFile(configPath, "utf8");
 
@@ -54,8 +54,9 @@ describe("lychee-config-nick2bad4u", () => {
         expect(config).toContain('output = ".lychee.report.md"');
         expect(config).toContain("cache = true");
         expect(config).toContain('max_cache_age = "7d"');
+        expect(config).toContain('cache_exclude_status = "429, 500.."');
         expect(config).toContain("max_concurrency = 12");
-        expect(config).toContain('"429"');
+        expect(config).not.toContain('    "429",');
         expect(config).toContain("require_https = true");
         expect(config).toContain("exclude_all_private = true");
         expect(config).toContain('[hosts."github.com"]');

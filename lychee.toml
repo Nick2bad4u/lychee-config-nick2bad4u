@@ -85,12 +85,11 @@ method = "get"
 
 header = { accept = "text/html,application/xhtml+xml,application/xml;q=0.9,text/plain;q=0.8,*/*;q=0.5", accept-language = "en-US,en;q=0.9" }
 
-# Keep the normal success range and tolerate 429 to avoid noisy CI failures.
+# Keep the normal success range.
 # 429 is not cached because of cache_exclude_status above.
 accept = [
     "100..=103",
     "200..=299",
-    "429",
 ]
 
 insecure = false
