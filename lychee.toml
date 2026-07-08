@@ -211,6 +211,11 @@ exclude = [
     '^https?://example\.(com|org|net)(?:/.*)?$',
     '^https?://your-domain\.example(?:/.*)?$',
     '^mailto:.*@example\.(com|org|net)$',
+    '^https?://.*\$\{[^}]+\}.*$',
+    '^https?://.*\$%7[Bb].*%7[Dd].*$',
+    '^https?://.*%24%7[Bb].*%7[Dd].*$',
+    '^https?://.*\{\{.*\}\}.*$',
+    '^https?://.*%7[Bb]%7[Bb].*%7[Dd]%7[Dd].*$',
 
     # Social/media sites that frequently block bots or return unstable statuses.
     '^https?://(www\.)?linkedin\.com(?:/.*)?$',
@@ -223,52 +228,59 @@ exclude = [
     # Badges are generated endpoints and often cause noise.
     '^https?://img\.shields\.io(?:/.*)?$',
     '^https?://badgen\.net(?:/.*)?$',
+
+    # npmjs package pages often block link-checking clients; registry endpoints
+    # such as registry.npmjs.org remain checkable.
+    '^https?://www\.npmjs\.com/package/[^?#]+(?:[/?#].*)?$',
+
+    # Low-value GitHub social pages can be unstable for freshly generated repos.
+    '^https?://github\.com/[^/]+/[^/]+/(?:stargazers|forks)(?:/.*)?$',
 ]
 
 exclude_path = [
     # VCS.
-    '(^|/)\.git/',
-    '(^|/)\.hg/',
-    '(^|/)\.svn/',
+    '(^|[/\\])\.git[/\\]',
+    '(^|[/\\])\.hg[/\\]',
+    '(^|[/\\])\.svn[/\\]',
 
     # Dependency/vendor dirs.
-    "(^|/)node_modules/",
-    "(^|/)bower_components/",
-    "(^|/)vendor/",
-    "(^|/)third[_-]?party/",
+    '(^|[/\\])node_modules[/\\]',
+    '(^|[/\\])bower_components[/\\]',
+    '(^|[/\\])vendor[/\\]',
+    '(^|[/\\])third[_-]?party[/\\]',
 
     # Build/cache/output dirs.
-    "(^|/)dist/",
-    "(^|/)build/",
-    "(^|/)out/",
-    "(^|/)coverage/",
-    '(^|/)\.nyc_output/',
-    '(^|/)\.next/',
-    '(^|/)\.nuxt/',
-    '(^|/)\.svelte-kit/',
-    '(^|/)\.turbo/',
-    '(^|/)\.vite/',
-    '(^|/)\.cache/',
-    '(^|/)\.parcel-cache/',
-    '(^|/)\.pytest_cache/',
-    '(^|/)\.ruff_cache/',
-    '(^|/)\.mypy_cache/',
-    '(^|/)\.tox/',
-    '(^|/)\.venv/',
-    "(^|/)venv/",
-    "(^|/)env/",
-    "(^|/)target/",
+    '(^|[/\\])dist[/\\]',
+    '(^|[/\\])build[/\\]',
+    '(^|[/\\])out[/\\]',
+    '(^|[/\\])coverage[/\\]',
+    '(^|[/\\])\.nyc_output[/\\]',
+    '(^|[/\\])\.next[/\\]',
+    '(^|[/\\])\.nuxt[/\\]',
+    '(^|[/\\])\.svelte-kit[/\\]',
+    '(^|[/\\])\.turbo[/\\]',
+    '(^|[/\\])\.vite[/\\]',
+    '(^|[/\\])\.cache[/\\]',
+    '(^|[/\\])\.parcel-cache[/\\]',
+    '(^|[/\\])\.pytest_cache[/\\]',
+    '(^|[/\\])\.ruff_cache[/\\]',
+    '(^|[/\\])\.mypy_cache[/\\]',
+    '(^|[/\\])\.tox[/\\]',
+    '(^|[/\\])\.venv[/\\]',
+    '(^|[/\\])venv[/\\]',
+    '(^|[/\\])env[/\\]',
+    '(^|[/\\])target[/\\]',
 
     # Generated/package-manager lock files.
-    '(^|/)package-lock\.json$',
-    '(^|/)npm-shrinkwrap\.json$',
-    '(^|/)pnpm-lock\.yaml$',
-    '(^|/)yarn\.lock$',
-    '(^|/)bun\.lockb$',
-    '(^|/)Cargo\.lock$',
-    '(^|/)uv\.lock$',
-    '(^|/)Pipfile\.lock$',
-    '(^|/)poetry\.lock$',
+    '(^|[/\\])package-lock\.json$',
+    '(^|[/\\])npm-shrinkwrap\.json$',
+    '(^|[/\\])pnpm-lock\.yaml$',
+    '(^|[/\\])yarn\.lock$',
+    '(^|[/\\])bun\.lockb$',
+    '(^|[/\\])Cargo\.lock$',
+    '(^|[/\\])uv\.lock$',
+    '(^|[/\\])Pipfile\.lock$',
+    '(^|[/\\])poetry\.lock$',
 
     # Binary/media/archive noise.
     '\.(7z|avi|avif|bmp|bz2|dll|dmg|exe|gif|gz|ico|jar|jpeg|jpg|lock|mov|mp3|mp4|pdf|png|svg|tar|tgz|webm|webp|whl|zip)$',

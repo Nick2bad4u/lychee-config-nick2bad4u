@@ -13,7 +13,7 @@ version = "1.0.1"
 
 [changelog]
     # A Tera template to be rendered as the changelog's header.
-    # @see https://keats.github.io/tera/docs/#introduction
+    # @see https://keats.github.io/tera/
     header = """
 <!-- markdownlint-disable -->
 <!-- eslint-disable markdown/no-missing-label-refs -->
