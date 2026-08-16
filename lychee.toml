@@ -1,6 +1,6 @@
 #:schema https://www.schemastore.org/lychee.json
 #
-# Shared Lychee link checker configuration for Nick2bad4u repositories.
+# Shared Lychee link-checker configuration for Nick2bad4u repositories.
 # Docs: https://lychee.cli.rs/guides/config/
 #
 # Run from this package:
@@ -9,54 +9,51 @@
 # Run from a consuming npm package:
 #   lychee --config node_modules/lychee-config-nick2bad4u/lychee.toml .
 #
-# For GitHub-heavy repos, set GITHUB_TOKEN in CI/local shell instead of
-# hardcoding credentials into TOML.
-#
-# #############################  Display  #############################
+# For GitHub-heavy repositories, set GITHUB_TOKEN in CI or the local shell.
+# Never hardcode credentials in this file.
 
-# Accepts: "error", "warn", "info", "debug", "trace"
-verbose = "info"
+# ############################# Display ##############################
 
-# Accepts: "compact", "detailed", "json", "junit", "markdown"
+# Keep routine successful-request logging quiet. The detailed report still
+# contains the summary and every rejected link.
+verbose = "warn"
+
+# Accepted values: "compact", "detailed", "json", "junit", "markdown".
 format = "detailed"
 
-# Accepts: "plain", "color", "emoji", "task"
+# Accepted values: "plain", "color", "emoji", "task".
 mode = "emoji"
 
-# Better for CI/non-interactive shells.
+# Better for CI and other non-interactive shells.
 no_progress = true
 
-# Markdown report output. Add this file to .gitignore if desired.
+# Generated report. This path is excluded below so the next run does not scan
+# its previous results. Consuming repositories should also ignore this file.
 output = ".lychee.report.md"
 
-# Show per-host stats at the end of the run.
+# Include per-host statistics in the final report.
 host_stats = true
 
-# Suggest archive replacements for broken links.
+# Suggest archived replacements for rejected links when available.
 suggest = true
 archive = "wayback"
 
-# #############################  Cache  ###############################
+# ############################## Cache ###############################
 
 # Cache successful checks between runs.
-cache = true
-
-# Keep cache reasonably fresh.
+cache         = true
 max_cache_age = "7d"
 
-# Do not cache rate-limit/server-error responses.
-cache_exclude_status = "429, 500.."
+# Retry authorization, anti-bot, timeout, rate-limit, and server failures on a
+# later run instead of preserving a misleading failure for seven days. Keep
+# deterministic client errors such as 404 cacheable.
+cache_exclude_status = "401, 403, 408, 425, 429, 500.."
 
-# #############################  Runtime  #############################
+# ############################# Runtime ##############################
 
-# Leave this modest for CI and rate-limited hosts.
-threads = 4
-
-# Global request concurrency.
-# Lychee default is high; this is intentionally less obnoxious.
-max_concurrency = 12
-
-# Per-host throttle. Prevents hammering GitHub, docs sites, CDNs, etc.
+# Conservative worker and request limits for CI and rate-limited hosts.
+threads               = 4
+max_concurrency       = 12
 host_concurrency      = 6
 host_request_interval = "100ms"
 
@@ -68,7 +65,7 @@ timeout         = 30
 # Apply to local files without an extension.
 default_extension = "md"
 
-# Directory links can resolve to these.
+# A directory link is valid only when one of these index files exists.
 index_files = [
     "index.html",
     "index.htm",
@@ -76,17 +73,19 @@ index_files = [
     "readme.md",
 ]
 
-# #############################  Requests  ############################
+# ############################ Requests ##############################
 
-# Do not use the malformed curl UA from the sample config.
+# Use a transparent browser-compatible user agent rather than impersonating a
+# crawler or using the malformed curl user agent from Lychee's example config.
 user_agent = "Mozilla/5.0 (compatible; lychee link checker; +https://github.com/lycheeverse/lychee)"
 
+# GET is more compatible than HEAD with documentation and storefront servers.
 method = "get"
 
 header = { accept = "text/html,application/xhtml+xml,application/xml;q=0.9,text/plain;q=0.8,*/*;q=0.5", accept-language = "en-US,en;q=0.9" }
 
-# Keep the normal success range.
-# 429 is not cached because of cache_exclude_status above.
+# Do not globally accept authentication failures, bot blocks, rate limits, or
+# server errors. Known uncheckable URL families belong in the scoped exclusions.
 accept = [
     "100..=103",
     "200..=299",
@@ -95,32 +94,25 @@ accept = [
 insecure = false
 min_tls  = "TLSv1_2"
 
-# Check real web links, mailto links, and local file links.
+# Mail checking is disabled below, so mailto is intentionally omitted here.
 scheme = [
     "http",
     "https",
-    "mailto",
     "file",
 ]
 
-# Treat HTTP links as failures when HTTPS is available.
+# Report HTTP links when the same target is available over HTTPS.
 require_https = true
 
-# Fragment checking:
-# - "anchor-only" is the best default for Markdown/docs.
-# - Use "full" if you also want text-fragment checks like #:~:text=...
+# Validate ordinary anchors without enabling fragile text-fragment checks.
 include_fragments = "anchor-only"
 
-# Usually noisy unless the repo intentionally validates mailto links.
-include_mail = false
-
-# Usually creates false positives from examples/code blocks.
-include_verbatim = false
-
-# Only enable this if you use Markdown wiki links and have base_url configured.
+# These are opt-in because they are noisy without repository-specific setup.
+include_mail      = false
+include_verbatim  = false
 include_wikilinks = false
 
-# Useful for extensionless local links in docs.
+# Resolve extensionless local documentation links when possible.
 fallback_extensions = [
     "html",
     "htm",
@@ -128,28 +120,21 @@ fallback_extensions = [
     "mdx",
 ]
 
-# Uncomment for published docs/sites with root-relative URLs like /docs/foo.
+# A consuming site can define these when its URL structure requires them:
 # base_url = "https://example.com/"
-
-# Uncomment for local absolute links like /assets/logo.svg.
-# Must be an absolute path on the runner/machine.
 # root_dir = "/absolute/path/to/site/root"
 
-# #############################  Inputs / Files  ######################
+# ########################## Inputs / Files ###########################
 
 skip_missing = false
 
-# Check hidden project folders like .github, .vscode, etc.
-# Actual junk folders are excluded below.
-hidden = true
-
-# Respect .gitignore/.ignore/global ignore files.
-no_ignore = false
-
-# Windows-friendly glob behavior.
+# Include useful hidden project folders such as .github and .vscode while still
+# respecting ignore files and the explicit path exclusions below.
+hidden           = true
+no_ignore        = false
 glob_ignore_case = true
 
-# File extensions lychee should scan when walking directories/globs.
+# File extensions scanned while walking directories or globs.
 extensions = [
     "md",
     "mkd",
@@ -194,98 +179,138 @@ extensions = [
     "go",
 ]
 
-# #############################  Exclusions  ##########################
+# ############################ Exclusions ############################
 
-# Avoid checking private/local/internal addresses from public docs.
+# Avoid requests to private, link-local, and loopback addresses when checking
+# public documentation. Local file:// links remain checkable.
 exclude_all_private = true
 
+# All expressions use TOML literal strings. Backslashes therefore reach the
+# regex engine unchanged and must not be doubled as TOML escapes.
 exclude = [
-    # Local/dev URLs.
+    # Local and development URLs. These are explicit for readability even
+    # though exclude_all_private handles their resolved addresses.
     "^https?://localhost(?::[0-9]+)?(?:/.*)?$",
     '^https?://127\.0\.0\.1(?::[0-9]+)?(?:/.*)?$',
     '^https?://0\.0\.0\.0(?::[0-9]+)?(?:/.*)?$',
     '^https?://\[::1\](?::[0-9]+)?(?:/.*)?$',
 
-    # Example/documentation placeholders.
-    '^https?://example\.(com|org|net)(?:/.*)?$',
-    '^https?://your-domain\.example(?:/.*)?$',
-    '^mailto:.*@example\.(com|org|net)$',
+    # IANA-reserved examples and documentation placeholders.
+    '^https?://(?:[^./?#]+\.)*example\.(?:com|net|org)(?::[0-9]+)?(?:[/?#].*)?$',
+    '^https?://(?:[^./?#]+\.)+(?:example|invalid|test)(?::[0-9]+)?(?:[/?#].*)?$',
+    '^mailto:[^@]+@(?:[^.]+\.)*example\.(?:com|net|org)$',
     '^https?://.*\$\{[^}]+\}.*$',
     '^https?://.*\$%7[Bb].*%7[Dd].*$',
-    '^https?://.*%24%7[Bb].*%7[Dd].*$',
+    "^https?://.*%24%7[Bb].*%7[Dd].*$",
     '^https?://.*\{\{.*\}\}.*$',
-    '^https?://.*%7[Bb]%7[Bb].*%7[Dd]%7[Dd].*$',
+    "^https?://.*%7[Bb]%7[Bb].*%7[Dd]%7[Dd].*$",
 
-    # Social/media sites that frequently block bots or return unstable statuses.
-    '^https?://(www\.)?linkedin\.com(?:/.*)?$',
-    '^https?://(www\.)?facebook\.com(?:/.*)?$',
-    '^https?://(www\.)?instagram\.com(?:/.*)?$',
-    '^https?://(www\.)?threads\.net(?:/.*)?$',
-    '^https?://x\.com(?:/.*)?$',
-    '^https?://twitter\.com(?:/.*)?$',
+    # Social sites that routinely block automated link checkers or expose
+    # unstable session-dependent pages.
+    '^https?://(?:www\.)?linkedin\.com(?:/.*)?$',
+    '^https?://(?:www\.)?facebook\.com(?:/.*)?$',
+    '^https?://(?:www\.)?instagram\.com(?:/.*)?$',
+    '^https?://(?:www\.)?threads\.net(?:/.*)?$',
+    '^https?://(?:www\.)?x\.com(?:/.*)?$',
+    '^https?://(?:www\.)?twitter\.com(?:/.*)?$',
 
-    # Badges are generated endpoints and often cause noise.
+    # Generated badge endpoints are low-value and frequently rate-limited.
     '^https?://img\.shields\.io(?:/.*)?$',
     '^https?://badgen\.net(?:/.*)?$',
 
-    # npmjs package pages often block link-checking clients; registry endpoints
-    # such as registry.npmjs.org remain checkable.
+    # npm package pages often block checkers. Registry endpoints such as
+    # registry.npmjs.org remain checkable.
     '^https?://www\.npmjs\.com/package/[^?#]+(?:[/?#].*)?$',
 
-    # Low-value GitHub social pages can be unstable for freshly generated repos.
+    # Low-value GitHub social pages can be unstable for newly created repos.
     '^https?://github\.com/[^/]+/[^/]+/(?:stargazers|forks)(?:/.*)?$',
+
+    # Authenticated Google editor URLs return 401 to anonymous clients.
+    # Published Google resources and script.google.com remain checkable.
+    '^https?://docs\.google\.com/(?:document|drawings|forms|presentation|spreadsheets)/d/[^/?#]+/edit(?:[?#].*)?$',
+
+    # Human-facing iNaturalist observations reject automated clients. Keep the
+    # api.inaturalist.org API and static image URLs checkable.
+    '^https?://(?:www\.)?inaturalist\.org/observations(?:/.*)?$',
+
+    # Retailer and location pages with consistent anonymous bot blocking.
+    '^https?://(?:www\.)?lowes\.com/pd(?:[/?#].*)?$',
+    '^https?://(?:www\.)?timeanddate\.com/sun(?:[/?#].*)?$',
+
+    # Publisher/document endpoints that consistently return 403 to Lychee.
+    # Limit DOI suppression to MDPI's 10.3390 prefix; other DOI links remain
+    # checkable.
+    '^https?://(?:www\.)?mdpi\.com(?:[/?#].*)?$',
+    '^https?://doi\.org/10\.3390(?:/.*)?$',
+    '^https?://(?:www\.)?cites\.org/sites/default/files/.*\.pdf(?:[?#].*)?$',
+
+    # Authoritative botanical pages that are valid in browsers but consistently
+    # return 403 to anonymous Lychee clients. Keep the GBIF API and other Kew
+    # properties checkable by excluding only the affected human-facing routes.
+    '^https?://powo\.science\.kew\.org/taxon(?:/.*)?$',
+    '^https?://(?:www\.)?gbif\.org/species(?:/.*)?$',
+
+    # Add narrowly scoped, evidence-backed cross-repository exclusions below.
 ]
 
 exclude_path = [
-    # VCS.
-    '(^|[/\\])\.git[/\\]',
-    '(^|[/\\])\.hg[/\\]',
-    '(^|[/\\])\.svn[/\\]',
+    # Lychee's own cache and report must never become inputs to the next run.
+    '(^|[\\/])\.lycheecache(?:[\\/]|$)',
+    '(^|[\\/])\.lychee\.report\.(?:md|txt|json|xml)$',
 
-    # Dependency/vendor dirs.
-    '(^|[/\\])node_modules[/\\]',
-    '(^|[/\\])bower_components[/\\]',
-    '(^|[/\\])vendor[/\\]',
-    '(^|[/\\])third[_-]?party[/\\]',
+    # Version-control metadata.
+    '(^|[\\/])\.git(?:[\\/]|$)',
+    '(^|[\\/])\.hg(?:[\\/]|$)',
+    '(^|[\\/])\.svn(?:[\\/]|$)',
 
-    # Build/cache/output dirs.
-    '(^|[/\\])dist[/\\]',
-    '(^|[/\\])build[/\\]',
-    '(^|[/\\])out[/\\]',
-    '(^|[/\\])coverage[/\\]',
-    '(^|[/\\])\.nyc_output[/\\]',
-    '(^|[/\\])\.next[/\\]',
-    '(^|[/\\])\.nuxt[/\\]',
-    '(^|[/\\])\.svelte-kit[/\\]',
-    '(^|[/\\])\.turbo[/\\]',
-    '(^|[/\\])\.vite[/\\]',
-    '(^|[/\\])\.cache[/\\]',
-    '(^|[/\\])\.parcel-cache[/\\]',
-    '(^|[/\\])\.pytest_cache[/\\]',
-    '(^|[/\\])\.ruff_cache[/\\]',
-    '(^|[/\\])\.mypy_cache[/\\]',
-    '(^|[/\\])\.tox[/\\]',
-    '(^|[/\\])\.venv[/\\]',
-    '(^|[/\\])venv[/\\]',
-    '(^|[/\\])env[/\\]',
-    '(^|[/\\])target[/\\]',
+    # Dependency and vendored directories.
+    '(^|[\\/])node_modules(?:[\\/]|$)',
+    '(^|[\\/])bower_components(?:[\\/]|$)',
+    '(^|[\\/])vendor(?:[\\/]|$)',
+    '(^|[\\/])third[_-]?party(?:[\\/]|$)',
 
-    # Generated/package-manager lock files.
-    '(^|[/\\])package-lock\.json$',
-    '(^|[/\\])npm-shrinkwrap\.json$',
-    '(^|[/\\])pnpm-lock\.yaml$',
-    '(^|[/\\])yarn\.lock$',
-    '(^|[/\\])bun\.lockb$',
-    '(^|[/\\])Cargo\.lock$',
-    '(^|[/\\])uv\.lock$',
-    '(^|[/\\])Pipfile\.lock$',
-    '(^|[/\\])poetry\.lock$',
+    # Generated, build, cache, and virtual-environment directories.
+    '(^|[\\/])dist(?:[\\/]|$)',
+    '(^|[\\/])build(?:[\\/]|$)',
+    '(^|[\\/])out(?:[\\/]|$)',
+    '(^|[\\/])coverage(?:[\\/]|$)',
+    '(^|[\\/])\.nyc_output(?:[\\/]|$)',
+    '(^|[\\/])\.next(?:[\\/]|$)',
+    '(^|[\\/])\.nuxt(?:[\\/]|$)',
+    '(^|[\\/])\.svelte-kit(?:[\\/]|$)',
+    '(^|[\\/])\.turbo(?:[\\/]|$)',
+    '(^|[\\/])\.vite(?:[\\/]|$)',
+    '(^|[\\/])\.cache(?:[\\/]|$)',
+    '(^|[\\/])\.parcel-cache(?:[\\/]|$)',
+    '(^|[\\/])\.pytest_cache(?:[\\/]|$)',
+    '(^|[\\/])\.ruff_cache(?:[\\/]|$)',
+    '(^|[\\/])\.mypy_cache(?:[\\/]|$)',
+    '(^|[\\/])\.tox(?:[\\/]|$)',
+    '(^|[\\/])\.venv(?:[\\/]|$)',
+    '(^|[\\/])venv(?:[\\/]|$)',
+    '(^|[\\/])env(?:[\\/]|$)',
+    '(^|[\\/])target(?:[\\/]|$)',
 
-    # Binary/media/archive noise.
-    '\.(7z|avi|avif|bmp|bz2|dll|dmg|exe|gif|gz|ico|jar|jpeg|jpg|lock|mov|mp3|mp4|pdf|png|svg|tar|tgz|webm|webp|whl|zip)$',
+    # Generated package-manager lock files.
+    '(^|[\\/])package-lock\.json$',
+    '(^|[\\/])npm-shrinkwrap\.json$',
+    '(^|[\\/])pnpm-lock\.yaml$',
+    '(^|[\\/])yarn\.lock$',
+    '(^|[\\/])bun\.lockb$',
+    '(^|[\\/])Cargo\.lock$',
+    '(^|[\\/])uv\.lock$',
+    '(^|[\\/])Pipfile\.lock$',
+    '(^|[\\/])poetry\.lock$',
+
+    # Binary, media, and archive inputs. Links to these files are still checked.
+    '(?i)\.(?:7z|avi|avif|bmp|bz2|dll|dmg|exe|gif|gz|ico|jar|jpeg|jpg|lock|mov|mp3|mp4|pdf|png|svg|tar|tgz|webm|webp|whl|zip)$',
 ]
 
-# #############################  Host tuning  #########################
+# ########################### Host tuning ############################
+
+[hosts."api.inaturalist.org"]
+    concurrency      = 2
+    request_interval = "500ms"
 
 [hosts."github.com"]
     concurrency      = 4
@@ -307,6 +332,10 @@ exclude_path = [
     concurrency      = 3
     request_interval = "300ms"
 
+[hosts."plants.ces.ncsu.edu"]
+    concurrency      = 1
+    request_interval = "1s"
+
 [hosts."www.npmjs.com"]
     concurrency      = 3
     request_interval = "300ms"
@@ -314,3 +343,11 @@ exclude_path = [
 [hosts."crates.io"]
     concurrency      = 2
     request_interval = "500ms"
+
+[hosts."commons.wikimedia.org"]
+    concurrency      = 3
+    request_interval = "300ms"
+
+[hosts."creativecommons.org"]
+    concurrency      = 3
+    request_interval = "300ms"

@@ -44,22 +44,34 @@ describe("lychee-config-nick2bad4u", () => {
     });
 
     it("keeps the shared Lychee defaults focused on CI-friendly link checks", async () => {
-        expect.assertions(13);
+        expect.assertions(19);
 
         const config = await readFile(configPath, "utf8");
 
+        expect(config).toContain('verbose = "warn"');
         expect(config).toContain('format = "detailed"');
         expect(config).toContain('mode = "emoji"');
         expect(config).toContain("no_progress = true");
         expect(config).toContain('output = ".lychee.report.md"');
-        expect(config).toContain("cache = true");
+        expect(config).toMatch(/^cache\s*=\s*true$/mv);
         expect(config).toContain('max_cache_age = "7d"');
-        expect(config).toContain('cache_exclude_status = "429, 500.."');
-        expect(config).toContain("max_concurrency = 12");
+        expect(config).toContain(
+            'cache_exclude_status = "401, 403, 408, 425, 429, 500.."'
+        );
+        expect(config).toMatch(/^max_concurrency\s*=\s*12$/mv);
+        expect(config).toContain('method = "get"');
         expect(config).not.toContain('    "429",');
         expect(config).toContain("require_https = true");
+        expect(config).toMatch(/^include_mail\s*=\s*false$/mv);
         expect(config).toContain("exclude_all_private = true");
+        expect(config).toContain(
+            String.raw`'(^|[\\/])\.lycheecache(?:[\\/]|$)'`
+        );
+        expect(config).toContain(
+            String.raw`'(^|[\\/])\.lychee\.report\.(?:md|txt|json|xml)$'`
+        );
         expect(config).toContain('[hosts."github.com"]');
+        expect(config).toContain('[hosts."api.inaturalist.org"]');
         expect(config).not.toContain("github_token");
     });
 });
