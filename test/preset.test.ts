@@ -74,4 +74,20 @@ describe("lychee-config-nick2bad4u", () => {
         expect(config).toContain('[hosts."api.inaturalist.org"]');
         expect(config).not.toContain("github_token");
     });
+
+    it("excludes deliberate Google test fixtures narrowly", async () => {
+        expect.assertions(3);
+
+        const config = await readFile(configPath, "utf8");
+
+        expect(config).toContain(
+            String.raw`'^https?://script\.google\.com/macros/s/test/exec(?:[/?#].*)?$'`
+        );
+        expect(config).toContain(
+            String.raw`'^https?://photos\.app\.goo\.gl/(?:example|abcdefghijkl)(?:[/?#].*)?$'`
+        );
+        expect(config).toContain(
+            String.raw`'^https?://photos\.google\.com/share/example(?:[/?#].*)?$'`
+        );
+    });
 });

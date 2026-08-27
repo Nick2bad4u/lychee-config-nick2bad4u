@@ -229,6 +229,12 @@ exclude = [
     # Published Google resources and script.google.com remain checkable.
     '^https?://docs\.google\.com/(?:document|drawings|forms|presentation|spreadsheets)/d/[^/?#]+/edit(?:[?#].*)?$',
 
+    # Deliberately fake Google URLs used by local Apps Script/browser test
+    # fixtures. Keep real deployments and album share IDs checkable.
+    '^https?://script\.google\.com/macros/s/test/exec(?:[/?#].*)?$',
+    '^https?://photos\.app\.goo\.gl/(?:example|abcdefghijkl)(?:[/?#].*)?$',
+    '^https?://photos\.google\.com/share/example(?:[/?#].*)?$',
+
     # Human-facing iNaturalist observations reject automated clients. Keep the
     # api.inaturalist.org API and static image URLs checkable.
     '^https?://(?:www\.)?inaturalist\.org/observations(?:/.*)?$',
