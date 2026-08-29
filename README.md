@@ -12,7 +12,7 @@ This package publishes a raw `lychee.toml` file plus a typed Node helper for too
 - enables a short-lived successful-request cache while refusing to cache rate-limit and server-error responses;
 - uses modest global and per-host concurrency for GitHub-heavy repositories;
 - checks HTTP, HTTPS, local file, and mailto links while leaving mail checks disabled by default;
-- excludes local/private addresses, generated outputs, dependency folders, lock files, binary assets, badges, and bot-hostile social sites.
+- excludes local/private addresses, generated outputs, dependency folders, lock files, binary assets, badges, and narrowly evidenced bot-hostile web routes.
 
 It does not wrap Lychee in a custom CLI. Consumers should keep using Lychee's native `--config` option so repository-local overrides stay obvious.
 

@@ -214,9 +214,22 @@ exclude = [
     '^https?://(?:www\.)?x\.com(?:/.*)?$',
     '^https?://(?:www\.)?twitter\.com(?:/.*)?$',
 
+    # Medium blocks its main site, profiles, and articles. Stack Overflow still
+    # serves tag and user pages to Lychee, so exclude only its blocked root,
+    # question, and answer routes.
+    '^https?://(?:www\.)?medium\.com(?:[/?#].*)?$',
+    '^https?://(?:www\.)?stackoverflow\.com/?(?:[?#].*)?$',
+    '^https?://(?:www\.)?stackoverflow\.com/(?:a|q|questions)(?:[/?#].*)?$',
+
     # Generated badge endpoints are low-value and frequently rate-limited.
     '^https?://img\.shields\.io(?:/.*)?$',
     '^https?://badgen\.net(?:/.*)?$',
+
+    # Package Phobia consistently rate-limits its human-facing pages even with
+    # single-request concurrency and multi-second pacing. Keep other routes,
+    # including any future API surface, checkable.
+    '^https?://(?:www\.)?packagephobia\.com/?(?:[?#].*)?$',
+    '^https?://(?:www\.)?packagephobia\.com/result(?:[/?#].*)?$',
 
     # npm package pages often block checkers. Registry endpoints such as
     # registry.npmjs.org remain checkable.
@@ -255,6 +268,11 @@ exclude = [
     # properties checkable by excluding only the affected human-facing routes.
     '^https?://powo\.science\.kew\.org/taxon(?:/.*)?$',
     '^https?://(?:www\.)?gbif\.org/species(?:/.*)?$',
+
+    # Reddit can reject valid links in hosted CI while returning success for
+    # nonexistent pages locally. Keep old.reddit.com and oauth.reddit.com
+    # checkable by limiting this exclusion to the main host.
+    '^https?://(?:www\.)?reddit\.com(?:[/?#].*)?$',
 
     # Add narrowly scoped, evidence-backed cross-repository exclusions below.
 ]

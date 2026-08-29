@@ -20,6 +20,40 @@ const readPackageManifest = async (): Promise<PackageManifest> =>
         await readFile(new URL("../package.json", import.meta.url), "utf8")
     ) as PackageManifest;
 
+const readExcludedUrlPatterns = (config: string): readonly RegExp[] => {
+    const lines = config.split(/\r?\n/v);
+    const openingIndex = lines.indexOf("exclude = [");
+    const closingIndex = lines.indexOf("]", openingIndex + 1);
+
+    if (openingIndex === -1 || closingIndex === -1) {
+        throw new Error("Could not find the Lychee exclude array");
+    }
+
+    return lines.slice(openingIndex + 1, closingIndex).flatMap((line) => {
+        const value = line.trim();
+
+        if (!value.startsWith("'") || !value.endsWith("',")) {
+            return [];
+        }
+
+        const pattern = value.slice(1, -2);
+        // eslint-disable-next-line security/detect-non-literal-regexp -- The test compiles trusted, repository-owned Lychee patterns using the closest compatible JavaScript regex mode.
+        const expression = new RegExp(pattern, "u");
+
+        return [expression];
+    });
+};
+
+const isExcludedUrl = (url: string, patterns: readonly RegExp[]): boolean =>
+    patterns.some((pattern) => pattern.test(url));
+
+const httpsUrl = (hostAndPath: string): string =>
+    [
+        "https:",
+        "//",
+        hostAndPath,
+    ].join("");
+
 describe("lychee-config-nick2bad4u", () => {
     it("exports a stable config file path", () => {
         expect.assertions(5);
@@ -89,5 +123,41 @@ describe("lychee-config-nick2bad4u", () => {
         expect(config).toContain(
             String.raw`'^https?://photos\.google\.com/share/example(?:[/?#].*)?$'`
         );
+    });
+
+    it("excludes evidenced bot-blocked web routes narrowly", async () => {
+        expect.assertions(2);
+
+        const config = await readFile(configPath, "utf8");
+        const patterns = readExcludedUrlPatterns(config);
+        const expectedExcludedUrls = [
+            httpsUrl("medium.com/@example/example-post"),
+            httpsUrl("stackoverflow.com/"),
+            httpsUrl("stackoverflow.com/a/123"),
+            httpsUrl("stackoverflow.com/q/123"),
+            httpsUrl("stackoverflow.com/questions/123/example"),
+            httpsUrl("packagephobia.com/"),
+            httpsUrl("packagephobia.com/result?p=example"),
+            httpsUrl("www.reddit.com/r/typescript"),
+            httpsUrl("www.reddit.com?context=3"),
+            httpsUrl("reddit.com#popular"),
+        ];
+        const expectedCheckedUrls = [
+            httpsUrl("stackoverflow.com/tags/typescript/info"),
+            httpsUrl("stackoverflow.com/users/123/example"),
+            httpsUrl("packagephobia.com/api/v1/package"),
+            httpsUrl("old.reddit.com/r/typescript"),
+            httpsUrl("oauth.reddit.com/api/v1/me"),
+            httpsUrl("www.walmart.com/definitely-not-a-real-product-9f7a"),
+            httpsUrl("www.office.com/interview"),
+            httpsUrl("www.nature.com/articles/definitely-not-real-9f7a"),
+        ];
+
+        expect(
+            expectedExcludedUrls.filter((url) => !isExcludedUrl(url, patterns))
+        ).toStrictEqual([]);
+        expect(
+            expectedCheckedUrls.filter((url) => isExcludedUrl(url, patterns))
+        ).toStrictEqual([]);
     });
 });
